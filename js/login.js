@@ -13,9 +13,14 @@ $(document).ready(function() {
 
         // Verify login
         var email = $("#login-email").val();
-        var pass = $("#login-password").val();
+        var password = $("#login-password").val();
 
         // Try to login
+        browser.runtime.sendMessage({
+            "name": "login",
+            "email": email,
+            "password": password
+        });
         /*verifyCredentials().then(function(content) {
             browser.storage.local.set({
                 "email": $("#login-email").val(),

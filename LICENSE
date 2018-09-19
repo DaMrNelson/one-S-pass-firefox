@@ -20,6 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-This software includes third party open source software components: Materialize
-and jQuery. Each of these software components have their own license. Please see
-LICENSES/materialize.txt and LICENSES/jquery.txt.
+This software includes third party open source software components: Materialize,
+jQuery, and sjcl. Each of these software components have their own license.
+Please see the LICENSES/*.

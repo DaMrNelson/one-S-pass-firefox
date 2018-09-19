@@ -4,6 +4,7 @@
 # Temp: Communication Notes
 - It looks like popup can communicate directly with background scripts. I think their scripts have access to sendMessage. I am not 100% sure tho.
 - You can communicate with tabs or scripts running on tabs (but should definitely NEVER let the tab's code see your message)
+- Some/all [CONTENT] could probably be replaced with [BACKGROUND]. But should it be? What would the benefits/fallbacks be?
 
 # Legend
 - [BACKGROUND]: A background script (always running)

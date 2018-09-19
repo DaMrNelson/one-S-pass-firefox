@@ -6,7 +6,10 @@
 
     "permissions": [
         "activeTab",
-        "storage"
+        "storage",
+        "webRequest",
+        "*://api.nschramm.com/*",
+        "*://127.0.0.1/*"
     ],
 
     "browser_action": {
@@ -18,13 +21,13 @@
     },
 
     "background": {
-        "scripts": ["background.js"]
+        "scripts": ["bower_components/sjcl/sjcl.js", "communicator.js"]
     },
 
     "content_scripts": [
         {
-            "matches": ["*://*.mozilla.org/*"],
-            "js": ["autoloader.js"]
+            "matches": ["<all_urls>"],
+            "js": []
         }
     ]
 }
