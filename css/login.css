@@ -1,0 +1,21 @@
+html, body {
+    width: 300px;
+}
+
+body {
+    padding: 20px;
+    box-sizing: content-box;
+}
+
+.col.s6 > input.btn {
+    width: 100%;
+    display: block;
+}
+
+#login-form > .row {
+    margin-bottom: 0px;
+}
+
+#login-form > .row > .input-field {
+    margin-bottom: 0px;
+}
