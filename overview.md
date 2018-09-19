@@ -49,3 +49,12 @@ NOTE: This assumes that the user is logged in. See **Process: Login** if they ar
 3. [CONTENT] If there is one, show it, and set a timer to clear it when it expires
 4. [CONTENT] If they click yes or no, tell [BACKGROUND]
 5. [BACKGROUND] Add to store, or delete and clear timer
+
+# Goals / things to not forget
+- Allow them to set password hints
+- MFA
+- Support Firefox, Chrome, Linux, Windows, OSX, Android, iOS, and windows phone
+    - Not sure what you will have to do once you get to mobile. Save to clipboard? Hopefully that is an option.
+- See where other password managers fucked up. Then don't do what they did.
+- Actually price this stuff out. Inb4 Two Dollar Pass, the Three Dollar Password Manager: One-time Price of Four Dollars!
+- Open source the server? Switch to Rust? Or would that just be making it more dangerous?
