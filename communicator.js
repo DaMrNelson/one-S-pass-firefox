@@ -4,8 +4,11 @@ var SALT = "OYVUXv&b";
 
 // Current login info
 var email = null;
-var password = null;
-var passwordHash = null;
+var passwordPrivateHash = null;
+var passwordPublicHash = null;
+
+// Vault (store in memory ofc)
+var vault = null;
 
 // Verifies that the current credentials are correct
 // Returns a promise that passes the content (responseText).
@@ -25,7 +28,7 @@ function verifyCredentials() {
         };
         req.open("GET", REMOTE + "/verify-credentials");
         req.setRequestHeader("ODP-Username", email);
-        req.setRequestHeader("ODP-Password-HEX", passwordHash);
+        req.setRequestHeader("ODP-Password-HEX", sjcl.codec.hex.fromBits(passwordHash));
         req.send();
     });
 }
@@ -33,7 +36,7 @@ function verifyCredentials() {
 // Attempts to pull the store from the API with the current credentials
 // Returns a promise that passes the raw content (response).
 // GET /get-store
-function getStore() {
+function getVault() {
     return new Promise(function(accept, reject) {
         var req = new XMLHttpRequest();
         req.open("GET", REMOTE + "/get-store");
@@ -41,13 +44,18 @@ function getStore() {
         req.setRequestHeader("ODP-Password-HEX", passwordHash);
         req.onload = function() {
             if (this.status === 200) {
-                accept(this.response);
+                try {
+                    var vault = JSON.parse(sjcl.decrypt(passwordHash, this.response));
+                    accept(vault);
+                } catch (e) {
+                    reject(this.response, e);
+                }
             } else {
-                reject(this.response);
+                reject(this.response, null);
             }
         }
         req.onerror = function() {
-            reject(null);
+            reject(null, null);
         }
         req.send();
     });
@@ -56,42 +64,46 @@ function getStore() {
 // Attempts to pull the store from the API with the current credentials
 // Returns a promise that passes the content (responseText).
 // GET /set-store
-function setStore() {
-    // TODO: This
+function setVault() {
+    var vault = sjcl.encrypt(passwordHash, JSON.stringify(vault));
+    // TODO: Send to server
 }
 
 // Listen for messages
 browser.runtime.onMessage.addListener(function(msg) {
     if (msg.name === "login") {
         email = msg.email;
-        password = msg.password;
+        passwordPrivateHash = sjcl.hash.sha256.hash(msg.password);
+        passwordPublicHash = null;
+        vault = null;
         // TODO: Set "logged out" state
 
-        // Hash password
-        var key = password;
-        console.log("Hashing", key);
+        // Hash public version of password
         var salt = "OYVUXv&b";
         var iterations = 100000;
         var length = 32;
-        passwordHash = sjcl.codec.hex.fromBits(sjcl.misc.pbkdf2(key, salt, iterations, length * 8, null));
-        console.log("Hashed to", passwordHash);
+        passwordPublicHash = sjcl.codec.hex.fromBits(sjcl.misc.pbkdf2(msg.password, salt, iterations, length * 8, null));
+        msg = undefined;
 
+        // Attempt to login
         verifyCredentials().then(function() {
             console.log("verifyCredentials passed!");
             // TODO: Put username and logged in state in store
 
-            getStore().then(function(store) {
-                // Decrypt
-                // TODO: Use AES CBC with a 256-bit IV (IV should be randomly generated differently every single time it is encrypted)
-                // Put the IV as the first 256 bits of the file or something, just in terms of storage
-                
-                console.log(store);
-                // TODO: Decrypt
+            getVault().then(function(new_vault) {
+                vault = new_vault;
+
+                if (vault === null) {
+                    // TODO: Tell user error
+                } else {
+                    // TODO: Tell user success
+                }
             });
         })
-        .catch(function(msg) {
+        .catch(function(body, exception) {
             console.log("verifyCredentials failed");
             console.log(msg);
+            console.log(exception);
             // TODO: Update storage to note that password was invalid, include message
         });
     }

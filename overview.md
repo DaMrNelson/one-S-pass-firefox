@@ -52,6 +52,7 @@ NOTE: This assumes that the user is logged in. See **Process: Login** if they ar
 5. [BACKGROUND] Add to store, or delete and clear timer
 
 # Goals / things to not forget
+- Random salt for every PBKDF2 password! Will need another command to get that salt before confirming password, but that's ok.
 - Allow them to set password hints
 - MFA
 - Support Firefox, Chrome, Linux, Windows, OSX, Android, iOS, and windows phone
@@ -59,3 +60,4 @@ NOTE: This assumes that the user is logged in. See **Process: Login** if they ar
 - See where other password managers fucked up. Then don't do what they did.
 - Actually price this stuff out. Inb4 Two Dollar Pass, the Three Dollar Password Manager: One-time Price of Four Dollars!
 - Open source the server? Switch to Rust? Or would that just be making it more dangerous?
+- // TODO: (in case of very specific Ctrl+F)
