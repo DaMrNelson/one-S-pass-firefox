@@ -5,6 +5,37 @@ browser.runtime.onMessage.addListener(function(msg) {
     }
 });
 
+// Show page based on `current-state` local storage variable
+function stateUpdated(state) {
+    var $loginForm = $("#login-form");
+    var $loadingScreen = $("#loading-screen");
+
+    if (state === "logged-out" || !state || typeof(state) !== "string") {
+        $loginForm.show();
+        $loadingScreen.hide();
+    } else if (state === "logged-in") {
+        document.location.href = "home.html";
+    } else {
+        $loginForm.show();
+        $loadingScreen.css({
+            "width": $loginForm.width() + "px",
+            "height": $loginForm.height() + "px"
+        });
+        $loginForm.hide();
+        $loadingScreen.show();
+
+        // Set text
+        // TODO: Show a fun fact or something as the description?
+        if (state === "hashing-password") {
+            $("#loading-desc").text("Securing Password");
+        } else if (state === "logging-in") {
+            $("#loading-desc").text("Logging In");
+        } else if (state === "decrypting-vault") {
+            $("#loading-desc").text("Decrypting Vault");
+        }
+    }
+}
+
 // Setup document
 $(document).ready(function() {
     // Form submissions
@@ -21,18 +52,6 @@ $(document).ready(function() {
             "email": email,
             "password": password
         });
-        /*verifyCredentials().then(function(content) {
-            browser.storage.local.set({
-                "email": $("#login-email").val(),
-                "logged-in": true,
-                "has-signed-up": true
-            });
-            alert("Good");
-            // TODO: This
-        }).catch(function(content) {
-            alert("Bad");
-            // TODO: This
-        });*/
     });
 
     // Open signup page
@@ -41,4 +60,22 @@ $(document).ready(function() {
             url: "https://onedollarpass.net/sign-up"
         });
     });
+
+    // Listen for storage changes
+    browser.storage.onChanged.addListener(function(changes, areaName) {
+        if (areaName !== "local") {
+            return;
+        }
+
+        if (changes["current-state"]) {
+            stateUpdated(changes["current-state"].newValue);
+        }
+    });
+
+    // Initial state update, in case this gets loaded halfway through a login
+    browser.storage.local.get("current-state").then(function(result) {
+        stateUpdated(result["current-state"]);
+    }).catch(function(err) {
+        stateUpdated(null);
+    });    
 });

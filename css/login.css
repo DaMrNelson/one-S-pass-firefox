@@ -19,3 +19,17 @@ body {
 #login-form > .row > .input-field {
     margin-bottom: 0px;
 }
+
+#loading-screen {
+    padding-top: 50px;
+    box-sizing: border-box;
+}
+
+#loading-title, #loading-desc {
+    text-align: center;
+}
+
+#loading-title {
+    font-size: 16px;
+    font-weight: bold;
+}

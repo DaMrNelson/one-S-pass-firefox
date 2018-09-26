@@ -51,6 +51,18 @@ NOTE: This assumes that the user is logged in. See **Process: Login** if they ar
 4. [CONTENT] If they click yes or no, tell [BACKGROUND]
 5. [BACKGROUND] Add to store, or delete and clear timer
 
+# Storage Variables
+
+## current-state
+- `logged-out`: Logged out completely
+- `hashing-password`: Hashing the user's password
+- `logging-in`: Sending request to server, downloading vault
+- `decrypting-vault`: Downloaded vault, now decrypting it
+- `logged-in`: Vault downloaded and decrypted, ready to do stuff
+
+## logged-in
+If the current credentials are valid login info.
+
 # Goals / things to not forget
 - Random salt for every PBKDF2 password! Will need another command to get that salt before confirming password, but that's ok.
 - Allow them to set password hints
