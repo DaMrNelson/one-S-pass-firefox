@@ -72,4 +72,6 @@ If the current credentials are valid login info.
 - See where other password managers fucked up. Then don't do what they did.
 - Actually price this stuff out. Inb4 Two Dollar Pass, the Three Dollar Password Manager: One-time Price of Four Dollars!
 - Open source the server? Switch to Rust? Or would that just be making it more dangerous?
+- Include open source licenses on all pages, or just manager? Or maybe right clicking on it shows them? Idk.
+- Conflict resolution. What happens if they make a password on one device and push it before saving? Probably just use hashes for this. Or maybe pull their vault before saving and check the vault version? And/or a vault version header/"get-vault-version"
 - // TODO: (in case of very specific Ctrl+F)

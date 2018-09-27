@@ -1,0 +1,94 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+#content-wrapper {
+    padding-left: 260px;
+    padding-right: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#side-nav {
+    position: fixed;
+    top: 64px;
+    bottom: 0px;
+    left: 0px;
+    width: 220px;
+    margin: 0px;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
+    background: #FFFFFF;
+}
+
+#side-nav > li {
+    border-bottom: 1px solid #AAAAAA;
+}
+
+#side-nav > li.active {
+    background: #E6E6E6;
+}
+
+#side-nav > li > a {
+    color: #000000;
+    display: block;
+    font-size: 14px;
+    height: 48px;
+    line-height: 48px;
+    padding: 0 20px;
+}
+
+nav, .page-footer {
+    z-index: 2;
+}
+
+#password-display {
+    position: relative;
+    width: 300px;
+    margin-top: 20px;
+}
+
+#password-display .card {
+    cursor: pointer;
+}
+
+#password-display .card:hover {
+    background: #EFEFEF;
+}
+
+#password-display .card-content {
+    padding: 8px 18px 8px 18px;
+}
+
+#password-display > .card > .card-content > .card-title {
+    font-size: 19px;
+    margin-bottom: 0px;
+}
+
+#password-display img {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 6px;
+    left: 6px;
+}
+
+.password-header {
+    margin-bottom: 8px;
+}
+
+.password-header > .input-field.inline {
+    width: 200px;
+    margin: 0px;
+    margin-left: 5px;
+}
+
+.password-header > div {
+    display: inline-block;
+    margin-right: 20px;
+}

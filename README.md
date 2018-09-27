@@ -1,2 +1,2 @@
-# one$pass Firefox
+# One$Pass Firefox
 A one buck password manager: Firefox extension.

@@ -76,18 +76,24 @@ function getVault() {
         setTimeout(function() {
             accept({
                 "version": 0,
-                "passwords": [
-                    {
-                        "sites": ["www.google.ca"],
-                        "username": "bobio",
-                        "password": "testing123"
-                    },
-                    {
-                        "sites": ["www.roblox.com"],
-                        "username": null,
-                        "password": "Hello World!"
-                    }
-                ],
+                "passwords": {
+                    "www.google.ca": [
+                        {
+                            "username": "bobio",
+                            "password": "testing123"
+                        },
+                        {
+                            "username": "sister",
+                            "password": "Hello World!"
+                        }
+                    ],
+                    "www.roblox.com": [
+                        {
+                            "username": null,
+                            "password": "shut up roblox is cool"
+                        }
+                    ]
+                },
                 "secrets": [
                     {
                         "Social Security Number": "0123456789",
@@ -110,7 +116,13 @@ function setVault() {
 }
 
 // Listen for messages
-browser.runtime.onMessage.addListener(function(msg) {
+browser.runtime.onMessage.addListener(function(msg, sender, senderResponse) {
+    // Verify that this is coming from our extension (should be guaranteed, but let's do this just to be safe)
+    if (sender.id !== browser.runtime.id) {
+        return;
+    }
+
+    // Parse message
     if (msg.name === "login") {
         email = msg.email;
         passwordPrivateHash = sjcl.hash.sha256.hash(msg.password);
@@ -151,7 +163,6 @@ browser.runtime.onMessage.addListener(function(msg) {
                     browser.storage.local.set({
                         "current-state": "logged-in"
                     });
-                    console.log("Loaded vault!", vault); // TODO: Remove; testing
                 }).catch(function(body, exception) {
                     // TODO: Tell user error
                 });
@@ -163,5 +174,17 @@ browser.runtime.onMessage.addListener(function(msg) {
                 // TODO: Update storage to note that password was invalid, include message
             });
         }, 100);
+    } else if (msg.name === "logout") {
+        email = null;
+        passwordPrivateHash = null;
+        passwordPublicHash = null;
+        vault = null;
+        browser.storage.local.set({
+            "current-state": "logged-out"
+        });
+    } else if (msg.name === "get-passwords") {
+        // TODO: Give passwords for the given site
+    } else if (msg.name === "get-vault") { // Used by manager only
+        senderResponse(vault);
     }
 });

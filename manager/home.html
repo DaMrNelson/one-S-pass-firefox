@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/css/materialize.min.css"/>
+        <script type="application/javascript" src="/js/jquery-3.3.1.min.js"></script>
+        <script type="application/javascript" src="/js/materialize.min.js"></script>
+        <script type="application/javascript" src="/bower_components/requirejs/require.js"></script>
+
+        <link rel="stylesheet" href="/css/main.css"/>
+
+        <script type="application/javascript" src="/js/manager-home.js"></script>
+        <link rel="stylesheet" href="/css/manager.css"/>
+    </head>
+    <body>
+        <nav>
+            <div class="nav-wrapper container">
+                <a href="#" class="brand-logo">One$Pass</a>
+                <ul class="right">
+                    <li class="active"><a href="/manager/home.html">Manager</a></li>
+                    <li><a href="TODO">Account</a></li>
+                    <li><a href="#">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <ul id="side-nav">
+            <li class="active"><a href="#">Passwords</a></li>
+            <li><a href="#">Secrets</a></li>
+            <li><a href="#">Configure</a></li>
+        </ul>
+
+        <main id="content-wrapper">
+            <div id="password-container">
+                <div class="password-header row left-align">
+                    <div>
+                        Username: <input id="password-username-filter" class="browser-default" type="text">
+                    </div>
+                    <div>
+                        Website: <input id="password-site-filter" class="browser-default" type="text">
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div id="password-display" class="center">
+                </div>
+                <div id="password-display-sample" class="card" style="display: none;">
+                    <div class="card-content">
+                        <img src="https://www.facebook.com/favicon.ico">
+                        <span class="card-title">
+                            www.facebook.com
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="secret-container" style="display: none;">
+                TODO
+            </div>
+
+            <div id="configure-container" style="display: none;">
+                TODO
+            </div>
+        </main>
+
+        <footer class="page-footer">
+            <div class="footer-copyright">
+                <div class="container">
+                    © 2018 Nelson Schramm
+                    <div class="right">
+                    <a href="#" class="grey-text text-lighten-4">Contact us at TODO</a>
+                    |
+                    <a href="https://materializecss.com/" target="_BLANK" class="grey-text text-lighten-4">Thanks to Materializecss!</a>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

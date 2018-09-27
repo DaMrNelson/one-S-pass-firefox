@@ -1,0 +1,18 @@
+html, body {
+    width: 300px;
+}
+
+body {
+    padding: 20px;
+    box-sizing: content-box;
+}
+
+#password-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.col.s6 > input.btn {
+    width: 100%;
+    display: block;
+}

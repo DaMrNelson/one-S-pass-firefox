@@ -14,7 +14,7 @@ function stateUpdated(state) {
         $loginForm.show();
         $loadingScreen.hide();
     } else if (state === "logged-in") {
-        document.location.href = "home.html";
+        document.location.href = "/popup/home.html";
     } else {
         $loginForm.show();
         $loadingScreen.css({
@@ -77,5 +77,5 @@ $(document).ready(function() {
         stateUpdated(result["current-state"]);
     }).catch(function(err) {
         stateUpdated(null);
-    });    
+    });
 });
