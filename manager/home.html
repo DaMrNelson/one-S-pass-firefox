@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" href="/css/materialize.min.css"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <script type="application/javascript" src="/js/jquery-3.3.1.min.js"></script>
         <script type="application/javascript" src="/js/materialize.min.js"></script>
         <script type="application/javascript" src="/bower_components/requirejs/require.js"></script>
@@ -30,6 +31,32 @@
             <li><a href="#">Configure</a></li>
         </ul>
 
+        <div id="overlay-wrapper" style="display: none;">
+            <div id="overlay-background"></div>
+            <div id="overlay-main" class="card">
+                <div class="card-content">
+                    <div class="card-title">
+                        <span id="overlay-site-name"></span>
+                        <span id="overlay-close" class="right">
+                            <i class="material-icons small">close</i>
+                        </span>
+                    </div>
+                    <table id="password-list" class="table highlight">
+                        <thead>
+                            <tr>
+                                <th style="width: 0%;">Username</th>
+                                <th style="width: 0%;">Password</th>
+                                <th style="width: 100%;">Notes</th>
+                                <th style="width: 0%;">Last Updated</th>
+                                <th style="width: 0%;">Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="password-list-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         <main id="content-wrapper">
             <div id="password-container">
                 <div class="password-header row left-align">
@@ -41,16 +68,39 @@
                     </div>
                 </div>
                 <div class="divider"></div>
-                <div id="password-display" class="center">
+                <div id="password-display">
                 </div>
                 <div id="password-display-sample" class="card" style="display: none;">
-                    <div class="card-content">
+                    <div class="card-content center">
                         <img src="https://www.facebook.com/favicon.ico">
                         <span class="card-title">
                             www.facebook.com
                         </span>
                     </div>
                 </div>
+                <table style="display: none;">
+                    <tr id="password-list-sample">
+                        <td class="list-username">nelson@nschramm.com</td>
+                        <td class="list-password">
+                            <i class="list-spoiler">HIDDEN</i>
+                            <span class="list-plain-password" style="display: none;">Hello123</span>
+                            <div style="display: inline-block; margin-left: 10px;">
+                                <span class="list-toggle tooltipped" data-tooltip="Show/Hide" data-position="top">
+                                    <i class="material-icons">visibility_on</i>
+                                </span>
+                                <span class="list-copy tooltipped" data-tooltip="Copy to Clipboard" data-position="top">
+                                    <i class="material-icons">content_copy</i>
+                                </span>
+                                <span class="list-generate tooltipped" data-tooltip="Generate" data-position="top">
+                                    <i class="material-icons">functions</i>
+                                </span>
+                            </div>
+                        </td>
+                        <td class="list-notes"></td>
+                        <td class="list-updated">20118-09-27 04:23:00 PM</td>
+                        <td class="list-edit"><i class="material-icons tooltipped" data-tooltip="Edit" data-position="top">edit</i></td>
+                    </tr>
+                </table>
             </div>
 
             <div id="secret-container" style="display: none;">
@@ -66,10 +116,17 @@
             <div class="footer-copyright">
                 <div class="container">
                     © 2018 Nelson Schramm
-                    <div class="right">
-                    <a href="#" class="grey-text text-lighten-4">Contact us at TODO</a>
-                    |
-                    <a href="https://materializecss.com/" target="_BLANK" class="grey-text text-lighten-4">Thanks to Materializecss!</a>
+                    <div class="right footer-links">
+                        <span>
+                            Contact us at
+                            <a href="#">TODO</a>
+                        </span>
+                        |
+                        <span>
+                            Thanks to
+                            <a href="https://materializecss.com/" target="_BLANK">Materializecss</a>!
+                        </span>
+                    </div>
                 </div>
             </div>
         </footer>

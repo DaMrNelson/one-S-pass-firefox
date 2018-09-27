@@ -77,26 +77,36 @@ function getVault() {
             accept({
                 "version": 0,
                 "passwords": {
-                    "www.google.ca": [
+                    "accounts.google.ca": [
                         {
-                            "username": "bobio",
-                            "password": "testing123"
+                            "username": "username",
+                            "password": "password",
+                            "updated": 1538091024242,
+                            "notes": "I made this password because I felt like it."
                         },
                         {
                             "username": "sister",
-                            "password": "Hello World!"
+                            "password": "Hello World!",
+                            "updated": 1246456156456
                         }
                     ],
-                    "www.roblox.com": [
+                    //"*.roblox.com/*": [
+                    "www.roblox.com": [ // TODO: Wildcard support
                         {
-                            "username": null,
+                            // notice missing "username" field, which is ok
                             "password": "shut up roblox is cool"
                         }
                     ]
                 },
                 "secrets": [
                     {
-                        "Social Security Number": "0123456789",
+                        "Social Security Number": {
+                            "value": "0123456789",
+                            "notes": "Last updated 2018"
+                        },
+                        "Girlfriend Gift Ideas": {
+                            "value": "- Flowers\n- Beer"
+                        }
                     }
                 ],
                 "sites-nicknames": {

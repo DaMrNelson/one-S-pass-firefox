@@ -74,4 +74,8 @@ If the current credentials are valid login info.
 - Open source the server? Switch to Rust? Or would that just be making it more dangerous?
 - Include open source licenses on all pages, or just manager? Or maybe right clicking on it shows them? Idk.
 - Conflict resolution. What happens if they make a password on one device and push it before saving? Probably just use hashes for this. Or maybe pull their vault before saving and check the vault version? And/or a vault version header/"get-vault-version"
+- Edit password entry on double click, and focus the param being edited
+- Password manager list should not scroll the title
+- Password manager list scroll should resset to top on open
+- Site aliasing: Show "Google" instead of "accounts.google.ca". Have some built-in, but should also allow the user to make their own / OVERRIDE the builtins (show as editing, but really they are overriding it and builtins are shipped with the extension, not in the file).
 - // TODO: (in case of very specific Ctrl+F)
