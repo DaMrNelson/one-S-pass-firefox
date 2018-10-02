@@ -48,7 +48,8 @@
                                 <th style="width: 0%;">Password</th>
                                 <th style="width: 100%;">Notes</th>
                                 <th style="width: 0%;">Last Updated</th>
-                                <th style="width: 0%;">Edit</th>
+                                <th style="width: 0%;"></th>
+                                <th style="width: 0%;"></th>
                             </tr>
                         </thead>
                         <tbody id="password-list-body">
@@ -80,15 +81,14 @@
                 </div>
                 <table style="display: none;">
                     <tr id="password-list-sample">
-                        <td class="list-username">nelson@nschramm.com</td>
-                        <td class="list-password">
-                            <i class="list-spoiler">HIDDEN</i>
-                            <span class="list-plain-password" style="display: none;">Hello123</span>
+                        <td><input class="list-username browser-default" type="text"></td>
+                        <td>
+                            <input class="list-password browser-default" type="password">
                             <div style="display: inline-block; margin-left: 10px;">
                                 <span class="list-toggle tooltipped" data-tooltip="Show/Hide" data-position="top">
                                     <i class="material-icons">visibility_on</i>
                                 </span>
-                                <span class="list-copy tooltipped" data-tooltip="Copy to Clipboard" data-position="top">
+                                <span class="list-copy uncopyable tooltipped" data-tooltip="Copy to Clipboard" data-position="top">
                                     <i class="material-icons">content_copy</i>
                                 </span>
                                 <span class="list-generate tooltipped" data-tooltip="Generate" data-position="top">
@@ -96,9 +96,10 @@
                                 </span>
                             </div>
                         </td>
-                        <td class="list-notes"></td>
+                        <td><input class="list-notes browser-default" type="text"></td>
                         <td class="list-updated">20118-09-27 04:23:00 PM</td>
-                        <td class="list-edit"><i class="material-icons tooltipped" data-tooltip="Edit" data-position="top">edit</i></td>
+                        <td class="list-save no-changes"><i class="material-icons tooltipped" data-tooltip="Save Changes" data-position="top">save</i></td>
+                        <td class="list-delete"><i class="material-icons tooltipped" data-tooltip="Delete Entry" data-position="top">delete</i></td>
                     </tr>
                 </table>
             </div>

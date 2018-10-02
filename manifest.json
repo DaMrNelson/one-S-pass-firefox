@@ -5,6 +5,7 @@
     "description": "Manage your passwords using One Dollar Pass!",
 
     "permissions": [
+        "tabs",
         "activeTab",
         "storage",
         "webRequest",

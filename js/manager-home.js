@@ -18,7 +18,6 @@ function vaultUpdated() {
     }
 
     $("#password-display").empty();
-    console.log("Display:", $("#password-display"));
     var $template = $("#password-display-sample");
 
     for (var site in vault.passwords) {
@@ -55,16 +54,51 @@ function vaultUpdated() {
                         var passwordVisible = false;
 
                         // Create element
-                        console.log("Doing the do for", password);
                         var $row = $rowTemplate.clone();
                         $row.attr("id", null);
                         $row.show();
                         $("#password-list-body").append($row);
 
+                        // Store some frequently used elements for later
+                        var $listUsername = $row.find(".list-username");
+                        var $listPassword = $row.find(".list-password");
+                        var $listNotes = $row.find(".list-notes");
+                        var $listSaveBtn = $row.find(".list-save");
+
+                        // Check if any fields have changed
+                        var hasChanged = function() {
+                            return $listUsername.val() !== (password.username || "")
+                                    || $listPassword.val() !== (password.password || "")
+                                    || $listNotes.val() !== (password.notes || "");
+                        }
+
                         // Update fields
-                        $row.find(".list-username").text(password.username || "");
-                        $row.find(".list-notes").text(password.notes || "");
+                        $listUsername.val(password.username || "");
+                        $listPassword.val(password.password || "");
+                        $listNotes.val(password.notes || "");
                         $row.find(".list-updated").text(new Date(password.updated).toLocaleString());
+
+                        // Update "save" button on field edit
+                        $row.find(".list-username,.list-password,.list-notes").on("input change paste keyup keydown", function() {
+                            if (hasChanged()) {
+                                if (!$listSaveBtn.hasClass("changes")) {
+                                    $listSaveBtn.removeClass("no-changes");
+                                    $listSaveBtn.addClass("changes");
+                                }
+                            } else {
+                                if (!$listSaveBtn.hasClass("no-changes")) {
+                                    $listSaveBtn.removeClass("changes");
+                                    $listSaveBtn.addClass("no-changes");
+                                }
+                            }
+                        });
+
+                        // Save on enter press
+                        $row.find(".list-username,.list-password,.list-notes").on("keydown", function($e) {
+                            if ($e.which == 13 || $e.keyCode == 13 || $e.key === "Enter") { // 2 depreciated, 1 not fully supported. Web dev is awesome!
+                                $listSaveBtn.find(".material-icons").click();
+                            }
+                        });
 
                         // Show password button
                         $row.find(".list-toggle").click(function() {
@@ -74,30 +108,80 @@ function vaultUpdated() {
                             );
 
                             if (passwordVisible) {
-                                $row.find(".list-spoiler").hide();
-                                $row.find(".list-plain-password").show();
-                                $row.find(".list-plain-password").text(password.password);
+                                $listPassword.attr("type", "text");
+                                $row.find(".list-copy").removeClass("uncopyable").addClass("copyable");
                             } else {
-                                $row.find(".list-spoiler").show();
-                                $row.find(".list-plain-password").hide();
-                                $row.find(".list-plain-password").html("");
+                                $listPassword.attr("type", "password");
+                                $row.find(".list-copy").removeClass("copyable").addClass("uncopyable")
                             }
                         });
 
-                        // Copy button
+                        // Password copy button
                         $row.find(".list-copy").click(function() {
-                            alert("TODO: Copy button");
+                            if ($listPassword.attr("type") === "password") {
+                                // TODO: Give a prompt telling the user they must make their password viewable first
+                                return;
+                            }
+
+                            $listPassword.select();
+                            document.execCommand("copy");
+
+                            // TODO: Show an overlay that reminds the user to clear their clipboard
                         });
 
-                        // Generate button
+                        // Password generate button
                         $row.find(".list-generate").click(function() {
                             alert("TODO: Generate button"); // Show dialog
                         });
 
-                        // Edit button
-                        $row.find(".list-edit").click(function() {
-                            alert("TODO: Edit button");
-                        })
+                        // Save button
+                        $listSaveBtn.find(".material-icons").click(function() {
+                            if (hasChanged()) {
+                                // Update list
+                                password.username = $listUsername.val();
+                                password.password = $listPassword.val();
+                                password.notes = $listNotes.val();
+                                password.updated = new Date().getTime();
+
+                                // Update graphic
+                                if (!$listSaveBtn.hasClass("no-changes")) {
+                                    $listSaveBtn.removeClass("changes");
+                                    $listSaveBtn.addClass("no-changes");
+                                }
+
+                                // Send to communicator
+                                browser.runtime.sendMessage({
+                                    "name": "set-passwords",
+                                    "site": site,
+                                    "passwords": passwords
+                                });
+                            }
+                        });
+
+                        // Delete button
+                        $row.find(".list-delete > .material-icons").click(function() {
+                            // TODO: Better prompt
+                            // Make sure it has a "don't ask me again"
+                            if (confirm("Are you sure you would like to delete this password?\n\nYou will only be able to get it back if you have stored it in a backup.")) {
+                                // Remove from list
+                                for (var i = 0; i < passwords.length; i++) {
+                                    if (passwords[i] === password) { // Compares by reference, not values
+                                        passwords.splice(i, 1);
+                                        break;
+                                    }
+                                }
+
+                                // Update graphic
+                                $row.remove();
+
+                                // Send to communicator
+                                browser.runtime.sendMessage({
+                                    "name": "set-passwords",
+                                    "site": site,
+                                    "passwords": passwords
+                                });
+                            }
+                        });
                     })(passwords[i]);
                 }
 
@@ -140,6 +224,16 @@ browser.storage.onChanged.addListener(function(changes, areaName) {
 
     if (changes["current-state"]) {
         stateUpdated(changes["current-state"].newValue);
+    } else if (changes["last-vault-update"]) {
+        // Get new vault
+        browser.runtime.sendMessage({
+            "name": "get-vault"
+        }).then(function(the_vault) {
+            vault = the_vault;
+            vaultUpdated();
+        }).catch(function(err) {
+            // TODO: Tell user
+        });
     }
 });
 

@@ -137,12 +137,30 @@ main {
     border: 1px solid rgba(0,0,0,0.12);
 }
 
-#password-list .list-edit {
+#password-list .list-notes {
+    width: 100%;
+}
+
+#password-list .list-save, #password-list .list-delete {
     padding-left: 16px;
     padding-right: 16px;
 }
 
-#password-list .list-edit > .material-icons {
+#password-list .list-save > .material-icons, #password-list .list-delete > .material-icons {
+    position: relative;
+    top: 4px;
+}
+
+#password-list .list-save.no-changes > .material-icons {
+    color: #888888;
+}
+
+#password-list .list-save.changes > .material-icons {
+    cursor: pointer;
+    color: #000000;
+}
+
+#password-list .list-delete > .material-icons {
     cursor: pointer;
 }
 
@@ -162,6 +180,10 @@ main {
 
 #password-list .list-toggle > .material-icons, #password-list .list-copy > .material-icons, #password-list .list-generate > .material-icons {
     pointer-events: none;
+}
+
+#password-list .list-copy.uncopyable {
+    color: #888888;
 }
 
 
