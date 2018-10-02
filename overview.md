@@ -77,5 +77,15 @@ If the current credentials are valid login info.
 - Conflict resolution lock. There will be &lt;10 second window where the client is resolving a conflict and will then push where the other client could push something and have it removed. Either the server should have some control over conflict resolution (ie making you pass some identifier for the last edit), or a lock should be applied.
 - Password manager list should not scroll the title
 - Password manager list scroll should reset to top on open
+- Allow editing a site pattern
+- Better patterns
+    - `*` = one section may be anything
+    - `**` = multiple sections may be anything
+- Pattern documentation for users
+    - Show on new site input
+    - Show on site pattern edit
+- Backup & restore to/from their disk
+    - Encrypted and non-encrypted (non-encrypted comes with a TON of warnings, but hey, might as well give them the option)
+    - Open backup even without logging in (with limited functionality)
 - Site aliasing: Show "Google" instead of "accounts.google.ca". Have some built-in, but should also allow the user to make their own / OVERRIDE the builtins (show as editing, but really they are overriding it and builtins are shipped with the extension, not in the file).
 - // TODO: (in case of very specific Ctrl+F)

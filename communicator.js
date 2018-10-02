@@ -22,7 +22,6 @@ browser.storage.local.set({
 // GET /verify-credentials
 function verifyCredentials() {
     return new Promise(function(accept, reject) {
-        /*
         var req = new XMLHttpRequest();
         req.onload = function() {
             if (this.status === 200) {
@@ -38,12 +37,13 @@ function verifyCredentials() {
         req.setRequestHeader("ODP-Username", email);
         req.setRequestHeader("ODP-Password-HEX", passwordPublicHash);
         req.send();
-        */
 
+        /*
         // TODO: Re-enable above, delete below; developing
         setTimeout(function() {
             accept("");
         }, 100);
+        */
     });
 }
 
@@ -52,7 +52,6 @@ function verifyCredentials() {
 // GET /get-store
 function getVault() {
     return new Promise(function(accept, reject) {
-        /*
         var req = new XMLHttpRequest();
         req.open("GET", REMOTE + "/get-store");
         req.setRequestHeader("ODP-Username", email);
@@ -73,8 +72,8 @@ function getVault() {
             reject(null, null);
         }
         req.send();
-        */
-
+        
+        /*
         // TODO: Re-enable above, delete below; developing
         setTimeout(function() {
             accept({
@@ -118,6 +117,7 @@ function getVault() {
                 }
             });
         }, 100);
+        */
     });
 }
 
@@ -126,7 +126,7 @@ function getVault() {
 // GET /set-store
 function setVault() {
     return new Promise(function(accept, reject) {
-        /*// Encrypt
+        // Encrypt
         var blob = new Blob([sjcl.encrypt(passwordPrivateHash, JSON.stringify(vault))], {"type": "text/plain"});
         
         // Send
@@ -151,12 +151,14 @@ function setVault() {
 
         var formData = new FormData();
         formData.append("file", blob, "file");
-        req.send(formData);*/
+        req.send(formData);
 
+        /*
         // TODO: Re-enable above, delete below; developing
         setTimeout(function() {
             accept("");
         }, 100);
+        */
     });
 }
 

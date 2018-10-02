@@ -45,7 +45,7 @@ function vaultUpdated() {
                 $("#password-list-body").empty();
 
                 // Show overlay
-                $("#overlay-wrapper").show();
+                $("#overlay-wrapper").modal("open");
                 $("#overlay-site-name").text(site);
 
                 // Fill in entries
@@ -194,15 +194,95 @@ function vaultUpdated() {
     console.log("Vault was updated! Now:", vault); // TODO: Remove; testing
 }
 
-// Setup document
-$(document).ready(function() {
-    // Hide overlay
-    $("#overlay-background,#overlay-close").click(function() {
-        $("#overlay-wrapper").hide();
+// Animate password add dialog
+function animatePasswordAdd() {
+    // Open button
+    $("#password-add").click(function() {
+        // Update list of sites
+        $("#new-password-site-choose :not(:first-child)").remove();
+        $("#new-password-site-choose :first-child").prop("selected", true);
+
+        for (var site in vault.passwords) {
+            var $option = $('<option></option>');
+            $option.attr("name", site);
+            $option.text(site);
+            $("#new-password-site-choose").append($option);
+        }
+
+        $("#new-password-site-choose").formSelect();
+
+        // Clear other inputs
+        $("#new-password-username,#new-password-password,#new-password-notes").val("");
+        $("#new-password-modal").modal("open");
     });
 
-    // Initiate tooltips
+    // Site add button
+    $("#new-password-site-add").click(function() {
+        // Get site
+        var site = prompt("Enter a site");
+
+        // Add to list
+        var $option = $('<option></option>');
+        $option.attr("name", site);
+        $option.text(site);
+        $("#new-password-site-choose").append($option);
+        $("#new-password-site-choose").children().each(function() {
+            if ($(this).attr("name") === site) {
+                $(this).prop("selected", true);
+            } else {
+                $(this).prop("selected", false);
+            }
+        });
+
+        $("#new-password-site-choose").formSelect();
+    });
+
+    // Create button
+    $("#new-password-create").click(function() {
+        // Get values
+        var site = $("#new-password-site-choose").val();
+        var username = $("#new-password-username").val();
+        var password = $("#new-password-password").val();
+        var notes = $("#new-password-notes").val();
+
+        if (!site) {
+            alert("Please choose a site.")
+            return;
+        }
+
+        // Add to vault
+        if (!vault.passwords[site]) {
+            vault.passwords[site] = []
+        }
+
+        vault.passwords[site].push({
+            "username": username,
+            "password": password,
+            "updated": new Date().getTime(),
+            "notes": notes
+        });
+
+        // Notify communicator of update
+        browser.runtime.sendMessage({
+            "name": "set-passwords",
+            "site": site,
+            "passwords": vault.passwords[site]
+        });
+
+        // Close modal
+        $("#new-password-modal").modal("close");
+    });
+}
+
+// Setup document
+$(document).ready(function() {
+    // Initialize some stuff
+    $("#new-password-modal,#overlay-wrapper").modal();
+    $("select").formSelect();
     $(".tooltipped").tooltip();
+
+    // Animate some other stuff
+    animatePasswordAdd();
 
     // Get vault
     browser.runtime.sendMessage({

@@ -31,7 +31,7 @@
             <li><a href="#">Configure</a></li>
         </ul>
 
-        <div id="overlay-wrapper" style="display: none;">
+        <!--<div id="overlay-wrapper" style="display: none;">
             <div id="overlay-background"></div>
             <div id="overlay-main" class="card">
                 <div class="card-content">
@@ -57,18 +57,102 @@
                     </table>
                 </div>
             </div>
+        </div>-->
+
+        <div id="overlay-wrapper" class="modal modal-wide">
+            <div class="modal-content">
+                <h4>
+                    <span id="overlay-site-name"></span>
+                    <span id="overlay-close" class="right modal-close">
+                        <i class="material-icons small">close</i>
+                    </span>
+                </h4>
+                <table id="password-list" class="table highlight">
+                    <thead>
+                        <tr>
+                            <th style="width: 0%;">Username</th>
+                            <th style="width: 0%;">Password</th>
+                            <th style="width: 100%;">Notes</th>
+                            <th style="width: 0%;">Last Updated</th>
+                            <th style="width: 0%;"></th>
+                            <th style="width: 0%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="password-list-body">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="btn btn-flat modal-close">Cancel</a>
+            </div>
         </div>
+
+        <div id="new-password-modal" class="modal">
+            <div class="modal-content">
+                <h4>Create Password</h4>
+                <div class="container">
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="input-field inline">
+                                <select id="new-password-site-choose">
+                                    <option value="" disabled selected>Choose site</option>
+                                </select>
+                            </div>
+                            <div id="new-password-site-add" class="btn btn-small"><i class="material-icons">add</i></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="input-field">
+                                <input id="new-password-username" type="text">
+                                <label for="new-password-username">Username</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="input-field">
+                                <input id="new-password-password" type="password">
+                                <label for="new-password-password">Password</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="input-field">
+                                <input id="new-password-notes" type="text">
+                                <label for="new-password-notes">Notes</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a id="new-password-create" href="#!" class="btn">Create</a>
+                <a href="#!" class="btn btn-flat modal-close">Cancel</a>
+            </div>
+        </div>
+
         <main id="content-wrapper">
             <div id="password-container">
                 <div class="password-header row left-align">
-                    <div>
-                        Username: <input id="password-username-filter" class="browser-default" type="text">
-                    </div>
-                    <div>
-                        Website: <input id="password-site-filter" class="browser-default" type="text">
-                    </div>
+                    <table style="width: 100%;">
+                        <tbody>
+                            <tr>
+                                <td class="section-first section-last">
+                                    <div id="password-add" class="btn btn-small"><i class="material-icons">add</i></div>
+                                </td>
+                                <td class="section-first">
+                                    Username: <input id="password-username-filter" class="browser-default" type="text">
+                                </td>
+                                <td>
+                                    Website: <input id="password-site-filter" class="browser-default" type="text">
+                                </td>
+                                <td style="width: 100%;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="divider"></div>
                 <div id="password-display">
                 </div>
                 <div id="password-display-sample" class="card" style="display: none;">
