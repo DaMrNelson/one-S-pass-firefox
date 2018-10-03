@@ -17,9 +17,7 @@
         <div class="center">One$Pass</div>
         <div class="row">
             <div class="col s12">
-                <div id="password-list">
-                    TODO: Scrollable list of passwords.
-                </div>
+                <div id="password-list" class="collection" style="display: none;"></div>
             </div>
         </div>
         <div class="row" style="margin-bottom: 8px;">
@@ -29,6 +27,23 @@
             <div class="col s6">
                 <input id="logout" type="button" class="btn btn-flat" value="Logout">
             </div>
+        </div>
+        <div id="sample-password" class="collection-item" style="display: none;">
+            <div>
+                <span class="username">Bob Smith</span>
+                <div class="controls">
+                    <span class="edit tooltipped" data-tooltip="Open in Manager" data-position="top">
+                        <i class="material-icons">edit</i>
+                    </span>
+                    <span class="copy tooltipped" data-tooltip="Copy to Clipboard" data-position="top">
+                        <i class="material-icons">content_copy</i>
+                    </span>
+                    <span class="insert tooltipped" data-tooltip="Insert to this page" data-position="top">
+                        <i class="material-icons">keyboard</i>
+                    </span>
+                </div>
+            </div>
+            <div class="notes">This is my super long description. Nobody in their right mind would ever have one this long, which is why I do!</div>
         </div>
     </body>
 </html>

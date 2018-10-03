@@ -75,8 +75,6 @@ If the current credentials are valid login info.
 - Include open source licenses on all pages, or just manager? Or maybe right clicking on it shows them? Idk.
 - Conflict resolution. If you make a password on one device the other should include it before pushing.
 - Conflict resolution lock. There will be &lt;10 second window where the client is resolving a conflict and will then push where the other client could push something and have it removed. Either the server should have some control over conflict resolution (ie making you pass some identifier for the last edit), or a lock should be applied.
-- Password manager list should not scroll the title
-- Password manager list scroll should reset to top on open
 - Allow editing a site pattern
 - Better patterns
     - `*` = one section may be anything
@@ -89,3 +87,8 @@ If the current credentials are valid login info.
     - Open backup even without logging in (with limited functionality)
 - Site aliasing: Show "Google" instead of "accounts.google.ca". Have some built-in, but should also allow the user to make their own / OVERRIDE the builtins (show as editing, but really they are overriding it and builtins are shipped with the extension, not in the file).
 - // TODO: (in case of very specific Ctrl+F)
+
+# Bugs
+- Password manager list should not scroll the title
+- Password manager list scroll should reset to top on open
+- In the "create password" prompt you can create a site that is already in the dropdown. This will not overwrite old site data, but really it should just select the proper site.

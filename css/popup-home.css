@@ -1,5 +1,6 @@
 html, body {
     width: 300px;
+    max-height: 500px;
 }
 
 body {
@@ -10,6 +11,43 @@ body {
 #password-list {
     max-height: 300px;
     overflow-y: auto;
+}
+
+#password-list .username {
+    line-height: 19px;
+}
+
+#password-list .controls {
+    float: right;
+    display: none;
+}
+
+#password-list .collection-item:hover .controls {
+    display: block;
+}
+
+#password-list .insert, #password-list .copy {
+    margin-right: 8px;
+}
+
+#password-list .insert, #password-list .copy, #password-list .edit {
+    cursor: pointer;
+    float: right;
+    height: 19px;
+}
+
+#password-list .insert > .material-icons, #password-list .copy > .material-icons, #password-list .edit > .material-icons {
+    font-size: 18px;
+}
+
+#password-list .notes {
+    /*display: inline-block;
+    max-width: 100%;*/
+    font-size: 12px;
+    line-height: 1rem;
+    /*white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;*/
 }
 
 .col.s6 > input.btn {

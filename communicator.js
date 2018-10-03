@@ -22,6 +22,7 @@ browser.storage.local.set({
 // GET /verify-credentials
 function verifyCredentials() {
     return new Promise(function(accept, reject) {
+        /*
         var req = new XMLHttpRequest();
         req.onload = function() {
             if (this.status === 200) {
@@ -37,13 +38,12 @@ function verifyCredentials() {
         req.setRequestHeader("ODP-Username", email);
         req.setRequestHeader("ODP-Password-HEX", passwordPublicHash);
         req.send();
+        */
 
-        /*
         // TODO: Re-enable above, delete below; developing
         setTimeout(function() {
             accept("");
         }, 100);
-        */
     });
 }
 
@@ -52,6 +52,7 @@ function verifyCredentials() {
 // GET /get-store
 function getVault() {
     return new Promise(function(accept, reject) {
+        /*
         var req = new XMLHttpRequest();
         req.open("GET", REMOTE + "/get-store");
         req.setRequestHeader("ODP-Username", email);
@@ -72,8 +73,8 @@ function getVault() {
             reject(null, null);
         }
         req.send();
+        */
         
-        /*
         // TODO: Re-enable above, delete below; developing
         setTimeout(function() {
             accept({
@@ -117,7 +118,6 @@ function getVault() {
                 }
             });
         }, 100);
-        */
     });
 }
 
@@ -126,6 +126,7 @@ function getVault() {
 // GET /set-store
 function setVault() {
     return new Promise(function(accept, reject) {
+        /*
         // Encrypt
         var blob = new Blob([sjcl.encrypt(passwordPrivateHash, JSON.stringify(vault))], {"type": "text/plain"});
         
@@ -152,13 +153,12 @@ function setVault() {
         var formData = new FormData();
         formData.append("file", blob, "file");
         req.send(formData);
+        */
 
-        /*
         // TODO: Re-enable above, delete below; developing
         setTimeout(function() {
             accept("");
         }, 100);
-        */
     });
 }
 
@@ -185,6 +185,89 @@ function doSync() {
     });
 }
 
+
+// Checks if the current URL matches the given URL
+// TODO: Fully implement
+//
+// Intended behavior:
+//      "example.com", "example.com" -> true
+//      "example.com", "bob.com" -> false
+//
+//      "example.com", "https://example.com" -> true
+//      "*://example.com", "https://example.com" -> true
+//      "https://example.com", "http://bob.com" -> false
+//      "https://example.com", "bob.com" -> false
+//
+//      "example.com", "a.example.com" -> false
+//      "*.example.com", "foo.example.com" -> true
+//      "*.example.com", "foo.bar.example.com" -> false
+//      "**.example.com", "foo.bar.example.com" -> true
+//      "foo.*.example.com", "foo.bar.example.com" -> true
+//      "foo.**.example.com", "foo.bar.example.com" -> true
+//      "foo.**.example.com", "foo.bar.baz.example.com" -> true
+//
+//      "example.com", "example.com/foo" -> true
+//      "example.com/*", "example.com/foo" -> true
+//      "example.com/*", "example.com/foo/bar" -> false
+//      "example.com/**", "example.com/foo/bar" -> true
+//      "example.com/*/bar", "example.com/foo/bar" -> true
+//      "example.com/**/bar", "foo.bar.example.com/foo/bar" -> true
+//      "example.com/**/baz", "foo.bar.example.com/foo/bar/baz" -> true
+function siteMatches(pattern, url) {
+    // Check protocol
+    var protoIndex = pattern.indexOf("://");
+    var urlProtoIndex = url.indexOf("://");
+    var proto = protoIndex === -1 ? "" : pattern.substring(0, protoIndex);
+    var urlProto = urlProtoIndex === -1 ? "" : url.substring(0, urlProtoIndex);
+
+    if (proto !== "" && proto !== "*") {
+        if (urlProto === "" || urlProto !== proto) {
+            return false;
+        }
+    }
+
+    if (proto !== "") {
+        pattern = pattern.substring(protoIndex + 3);
+    }
+
+    if (urlProto !== "") {
+        url = url.substring(urlProtoIndex + 3);
+    }
+
+    // Check domain
+    // TODO: Wildcards (CTRL+F for "Implement domain wildcards here")
+    var domainIndex = pattern.indexOf("/");
+    domainIndex = domainIndex === -1 ? pattern.length : domainIndex;
+    var urlDomainIndex = url.indexOf("/");
+    urlDomainIndex = urlDomainIndex === -1 ? url.length : urlDomainIndex;
+
+    var domain = pattern.substring(0, domainIndex);
+    var urlDomain = url.substring(0, urlDomainIndex);
+
+    if (domain === "") { // Invalid pattern
+        return false;
+    }
+
+    // TODO: Implement domain wildcards here (split by periods, probably)
+    if (domain !== urlDomain) {
+        return false;
+    }
+
+    pattern = pattern.substring(domainIndex);
+    url = url.substring(urlDomainIndex);
+
+    // Check path
+    // TODO: Wildcards (CTRL+F for "Implement path wildcards here")
+
+    // TODO: Implement path wildcards here (split by slashes, probably)
+    if (pattern !== "" && pattern !== url) {
+        return false;
+    }
+
+    // Passed all tests; it matches!
+    return true;
+}
+
 // Listen for messages
 browser.runtime.onMessage.addListener(function(msg, sender, senderResponse) {
     // Verify that this is coming from our extension (should be guaranteed, but let's do this just to be safe)
@@ -204,7 +287,7 @@ browser.runtime.onMessage.addListener(function(msg, sender, senderResponse) {
             "current-state": "hashing-password"
         });
 
-        setTimeout(function() { // Give the browser at least a chance to hash the password
+        setTimeout(function() { // Give the browser at least a chance to show "hashing the password"
             // Hash public version of password
             var salt = "OYVUXv&b";
             var iterations = 100000;
@@ -256,7 +339,16 @@ browser.runtime.onMessage.addListener(function(msg, sender, senderResponse) {
             "current-state": "logged-out"
         });
     } else if (msg.name === "get-passwords") {
-        // TODO: Give passwords for the given site
+        // Find any sites that match the current website
+        var passwords = [];
+
+        for (var site in vault.passwords) {
+            if (siteMatches(site, msg.site)) {
+                passwords = passwords.concat(vault.passwords[site]);
+            }
+        }
+
+        senderResponse(passwords);
     } else if (msg.name === "get-vault") { // Used by manager only
         senderResponse(vault);
     } else if (msg.name === "set-passwords") { // Used by manager only
