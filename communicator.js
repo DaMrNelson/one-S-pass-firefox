@@ -12,6 +12,9 @@ var passwordPublicHash = null;
 var vault = null;
 var original_vault = null;
 
+// Current URL
+var currentUrl = null;
+
 // Set logged out state
 browser.storage.local.set({
     "current-state": "logged-out"
@@ -80,7 +83,7 @@ function getVault() {
             accept({
                 "version": 0,
                 "passwords": {
-                    "accounts.google.ca": [
+                    "accounts.google.com": [
                         {
                             "username": "username",
                             "password": "password",
@@ -268,6 +271,69 @@ function siteMatches(pattern, url) {
     return true;
 }
 
+// Gets passwords for the given URL
+function getPasswords(url) {
+    var passwords = [];
+
+    for (var site in vault.passwords) {
+        if (siteMatches(site, url)) {
+            passwords = passwords.concat(vault.passwords[site]);
+        }
+    }
+
+    return passwords;
+}
+
+// Updates the list of passwords fora  tab
+function updateTabPasswords(url, tabId) {
+    // Get passwords
+    var passwords = getPasswords(url);
+
+    // Update badge
+    browser.browserAction.setBadgeText({
+        "text": passwords.length === 0 ? null : ("" + passwords.length),
+        "tabId": tabId
+    });
+
+    // Tell popup
+    browser.runtime.sendMessage({
+        "name": "update-passwords",
+        "passwords": passwords
+    }).catch(function(err) {
+        // Typically occurs when the popup isn't open
+        // Might occur some other times tho
+        // TODO: Notify user on unexpected error
+    });
+}
+
+// Monitors the given tab for page changes, and updated passwords accordingly
+var lastTabUpdateListener = null;
+function monitorTab(tab) {
+    if (tab.url) {
+        currentUrl = tab.url;
+        updateTabPasswords(tab.url, tab.id);
+    }
+
+    // Remove old listener
+    if (lastTabUpdateListener) {
+        browser.tabs.onUpdated.removeListener(lastTabUpdateListener);
+        lastTabUpdateListener = null;
+    }
+
+    // Add new one
+    browser.tabs.onUpdated.addListener(
+        function(tabId, changeInfo, tab) {
+            if (tab.url !== currentUrl) {
+                currentUrl = tab.url;
+                updateTabPasswords(tab.url, tab.id);
+            }
+        },
+        {
+            "tabId": tab.tabId
+        }
+    );
+}
+
 // Listen for messages
 browser.runtime.onMessage.addListener(function(msg, sender, senderResponse) {
     // Verify that this is coming from our extension (should be guaranteed, but let's do this just to be safe)
@@ -339,16 +405,11 @@ browser.runtime.onMessage.addListener(function(msg, sender, senderResponse) {
             "current-state": "logged-out"
         });
     } else if (msg.name === "get-passwords") {
-        // Find any sites that match the current website
-        var passwords = [];
-
-        for (var site in vault.passwords) {
-            if (siteMatches(site, msg.site)) {
-                passwords = passwords.concat(vault.passwords[site]);
-            }
+        if (currentUrl) {
+            senderResponse(getPasswords(currentUrl));
+        } else {
+            senderResponse([]);
         }
-
-        senderResponse(passwords);
     } else if (msg.name === "get-vault") { // Used by manager only
         senderResponse(vault);
     } else if (msg.name === "set-passwords") { // Used by manager only
@@ -374,4 +435,21 @@ browser.runtime.onMessage.addListener(function(msg, sender, senderResponse) {
             doSync();
         }
     }
+});
+
+// Get passwords for current tab
+browser.tabs.query({"active": true, "currentWindow": true}).then(function(tabs) {
+    monitorTab(tabs[0]); // Should only ever be one
+}).catch(function(err) {
+    // TODO: Display error to user?
+});
+
+// Get passwords for any other tabs that are swapped to
+browser.tabs.onActivated.addListener(function(activeInfo) {
+    browser.tabs.get(activeInfo.tabId).then(function(tab) {
+        monitorTab(tab);
+    }).catch(function(err) {
+        // TODO: Display error to user?
+    });
+    
 });
