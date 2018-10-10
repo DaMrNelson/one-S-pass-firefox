@@ -273,15 +273,19 @@ function siteMatches(pattern, url) {
 
 // Gets passwords for the given URL
 function getPasswords(url) {
-    var passwords = [];
+    if (vault) {
+        var passwords = [];
 
-    for (var site in vault.passwords) {
-        if (siteMatches(site, url)) {
-            passwords = passwords.concat(vault.passwords[site]);
+        for (var site in vault.passwords) {
+            if (siteMatches(site, url)) {
+                passwords = passwords.concat(vault.passwords[site]);
+            }
         }
-    }
 
-    return passwords;
+        return passwords;
+    } else {
+        return [];
+    }
 }
 
 // Updates the list of passwords fora  tab
@@ -332,6 +336,16 @@ function monitorTab(tab) {
             "tabId": tab.tabId
         }
     );
+}
+
+// Updates the badge for the current tab
+// Used in situations where browser.tabs.onUpdated is not called but the passwords are updated.
+function updateCurrentBadge() {
+    browser.tabs.query({"active": true, "currentWindow": true}).then(function(tabs) {
+        updateTabPasswords(tabs[0].url, tabs[0].id); // Should only ever be one
+    }).catch(function(err) {
+        // TODO: Display error to user?
+    });
 }
 
 // Listen for messages
@@ -385,6 +399,9 @@ browser.runtime.onMessage.addListener(function(msg, sender, senderResponse) {
                         "current-state": "logged-in",
                         "last-vault-update": new Date().getTime()
                     });
+
+                    // Update badge
+                    updateCurrentBadge();
                 }).catch(function(body, exception) {
                     // TODO: Tell user error
                 });
@@ -404,6 +421,9 @@ browser.runtime.onMessage.addListener(function(msg, sender, senderResponse) {
         browser.storage.local.set({
             "current-state": "logged-out"
         });
+
+        // Update badge
+        updateCurrentBadge();
     } else if (msg.name === "get-passwords") {
         if (currentUrl) {
             senderResponse(getPasswords(currentUrl));
@@ -425,6 +445,9 @@ browser.runtime.onMessage.addListener(function(msg, sender, senderResponse) {
             browser.storage.local.set({
                 "last-vault-update": new Date().getTime()
             });
+
+            // Update badge
+            updateCurrentBadge();
 
             // TODO: Does anything else need to know about the update?
             // Maybe popups open for certain websites?

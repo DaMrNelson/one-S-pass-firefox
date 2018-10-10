@@ -50,7 +50,7 @@ body {
     overflow: hidden;*/
 }
 
-.col.s6 > input.btn {
+.col.s6 > input.btn, .col.s12 > input.btn {
     width: 100%;
     display: block;
 }

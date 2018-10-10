@@ -39,8 +39,6 @@ function displayPasswords(passwords) {
                 }
 
                 // Animate
-                $entry.find(".tooltipped").tooltip();
-
                 $entry.find(".insert").click(function() {
                     alert("TODO: Insert button");
                 });
@@ -56,6 +54,8 @@ function displayPasswords(passwords) {
             })(passwords[i]);
         }
     }
+
+    $(".tooltipped").tooltip();
 }
 
 // Setup document

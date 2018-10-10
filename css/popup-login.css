@@ -7,7 +7,7 @@ body {
     box-sizing: content-box;
 }
 
-.col.s6 > input.btn {
+.col.s6 > input.btn, .col.s12 > input.btn {
     width: 100%;
     display: block;
 }

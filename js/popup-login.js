@@ -38,6 +38,9 @@ function stateUpdated(state) {
 
 // Setup document
 $(document).ready(function() {
+    // Initialize some stuff
+    $(".tooltipped").tooltip();
+
     // Form submissions
     $("#login").click(function() {
         var $form = $(this);
